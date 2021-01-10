@@ -57,7 +57,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {
+    auth().onAuthStateChanged((user) => {
       if (user) {
         firestore
           .collection('users')
