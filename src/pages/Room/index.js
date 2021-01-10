@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 
 class Room extends Component {
-    state = {
-    };
+  state = {
+  };
 
-    componentDidMount() {
-    }
+  componentDidMount() {
+  }
 
-    render() {
-        return (
-            <div>
-                Room
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        Room
+      </div>
+    );
+  }
 }
 
 export default Room;

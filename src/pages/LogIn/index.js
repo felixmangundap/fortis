@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 
 class LogIn extends Component {
-    state = {
-    };
+  state = {
+  };
 
-    componentDidMount() {
-    }
+  componentDidMount() {
+  }
 
-    render() {
-        return (
-            <div>
-                LogIn
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        LogIn
+      </div>
+    );
+  }
 }
 
 export default LogIn;
