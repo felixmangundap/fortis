@@ -1,11 +1,6 @@
 #dashboard {
-  /* background-color: red; */
-  position: absolute;
-  width: 50vw;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  padding: 0;
+  margin: 0;
 }
 
 #divider {
@@ -16,21 +11,60 @@
 #create-button {
   background-color: #3da9fc;
   border-radius: 10px;
+  padding: 15px;
 }
 
 #join-button {
-  background-color: #3da9fc;
+  color: #3da9fc;
+  background-color: white;
   border-radius: 10px;
+  padding: 15px;
 }
 
 #create-input {
-  border-top: transparent;
-  border-left: transparent;
-  border-right: transparent;
+  border: transparent;
+  margin-top: 18vh;
+  margin-bottom: 18vh;
+  padding: 0;
+  font-size: 18px;
 }
 
 #join-input {
-  border-top: transparent;
-  border-left: transparent;
-  border-right: transparent;
+  border: transparent;
+  color: white;
+  background-color: transparent;
+  margin-top: 18vh;
+  margin-bottom: 18vh;
+  padding: 0;
+  font-size: 18px;
+}
+
+#left-dashboard {
+  position: relative;
+  padding-top: 25vh;
+  padding-bottom: 25vh;
+  padding-left: 7vw;
+  padding-right: 7vw;
+  height: 100vh;
+}
+
+#right-dashboard {
+  position: relative;
+  background-color: #3da9fc;
+  padding-top: 25vh;
+  padding-bottom: 25vh;
+  padding-left: 7vw;
+  padding-right: 7vw;
+  height: 100vh;
+  height: 100vh;
+}
+
+#inner-left h1 {
+  font-size: 36px;
+  color: #094067;
+}
+
+#inner-right h1 {
+  font-size: 36px;
+  color: white;
 }

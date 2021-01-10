@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {Redirect} from 'react-router-dom';
 import './styles.css';
 
@@ -57,41 +57,42 @@ class Dashboard extends Component {
       return <Redirect to={`/room/${this.state.code}`}/>;
     }
     return (
-      <div id="dashboard">
-        <div className="ui grid">
-          <div className="eight wide column">
-            <div className="ui fluid input">
-              <input type="text" 
-              id="create-input"
-              placeholder="Type your room name" 
-              name="roomName"
-              onChange={this.handleChange}
-              value={this.state.roomName}/>
+      <Fragment>
+        <div className="ui stackable grid" id="dashboard">
+          <div className="eight wide column" id="left-dashboard">
+            <div id="inner-left">
+              <h1>Create a room </h1>
+              <div className="ui fluid input">
+                <input type="text" 
+                id="create-input"
+                placeholder="Type your room name..." 
+                name="roomName"
+                onChange={this.handleChange}
+                value={this.state.roomName}/>
+              </div>
+              <button className="ui primary fluid button" id="create-button"
+              onClick={this.handleCreateRoom}>Create Room</button>
             </div>
           </div>
-          <div className="eight wide column">
-            <button className="ui primary fluid button" id="create-button"
-            onClick={this.handleCreateRoom}>Create Room</button>
-          </div>
-        </div>
-        <h4 id="divider">OR</h4>
-        <div className="ui grid">
-          <div className="eight wide column">
-            <div className="ui fluid input">
-              <input type="text" 
-              id="join-input"
-              placeholder="Enter your room code" 
-              name="code" 
-              onChange={this.handleChange}
-              value={this.state.code}/>
+          <div className="eight wide column" id="right-dashboard">
+            <div id="inner-right">
+              <h1>Join a room </h1>
+              <div className="ui fluid input">
+                <input type="text" 
+                id="join-input"
+                placeholder="Enter an existing room code here..." 
+                name="code" 
+                onChange={this.handleChange}
+                value={this.state.code}/>
+              </div>
+              <div id="joinbutton-container">
+                <button className="ui primary fluid button" id="join-button"
+                onClick={this.handleJoinRoom}>Join Room</button>
+              </div>
             </div>
           </div>
-          <div className="eight wide column">
-            <button className="ui primary fluid button" id="join-button"
-            onClick={this.handleJoinRoom}>Join Room</button>
-          </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }
