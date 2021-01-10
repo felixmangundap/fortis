@@ -1,0 +1,21 @@
+#menubar {
+  background: transparent;
+  position: absolute;
+  top:15px;
+}
+
+.no-border {
+  border: none !important;
+}
+
+.no-border::before {
+  display: none !important;
+}
+
+.item.text {
+  font-size: 1.25em;
+}
+
+.logoImage {
+  height: 50px;
+}

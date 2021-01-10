@@ -8,9 +8,9 @@ import {
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import Personal from './pages/Personal';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
+import Room from './pages/Room';
+import SignUp from './pages/SignUp';
+import LogIn from './pages/LogIn';
 import { auth, firestore } from './services/firebase';
 import './styles.css';
 
@@ -101,17 +101,17 @@ class App extends Component {
             <PrivateRoute
               path="/room"
               authenticated={this.state.authenticated}
-              component={Personal}
+              component={Room}
             ></PrivateRoute>
             <PublicRoute
               path="/signup"
               authenticated={this.state.authenticated}
-              component={Signup}
+              component={SignUp}
             ></PublicRoute>
             <PublicRoute
               path="/login"
               authenticated={this.state.authenticated}
-              component={Login}
+              component={LogIn}
             ></PublicRoute>
           </Switch>
         </Fragment>
