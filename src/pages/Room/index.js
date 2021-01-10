@@ -250,26 +250,35 @@ class Room extends Component {
 
     // console.log(questions);
     return (
-      <div>
+        <div className="ui two column stackable grid">
         {questions.map(question => (
-          <div>
-            <div>
-              {question.question}
+          <div className="ui column">
+          <div className="ui fluid card card-question">
+            <div className="content">
+              <div className="header">{question.author}</div>
+              <div className="description">
+                <p>{question.question}</p>
+              </div>
             </div>
-            { !this.isUserPresenter(userId) &&
-            <button onClick={() => this.handleUpvote(question.uid)}>
-              upvote
-            </button> }
-            { this.isUserPresenter(userId) &&
-            <button onClick={() => this.handleResolve(question.uid)}>
-              resolve
-            </button> }
-            <div>
-              {question.upvotes.length} asked by = {question.author}
+            <div className="extra content">
+              <span className="left floated like">
+                <i className="caret up icon"></i>
+                {question.upvotes.length}
+                { !this.isUserPresenter(userId) &&
+                <button onClick={() => this.handleUpvote(question.uid)}>
+                  upvote
+                </button> }
+                { this.isUserPresenter(userId) &&
+                <button className= "ui icon button resolve-button" onClick={() => this.handleResolve(question.uid)}>
+                  Resolve
+                  <i className="check circle outline icon"></i>
+                </button> }
+              </span>
             </div>
           </div>
+          </div>
         ))}
-      </div>
+        </div>
     )
   }
 
