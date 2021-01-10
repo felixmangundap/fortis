@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { signin, signInWithGoogle } from '../../services/auth';
+import './styles.css';
 
 class LogIn extends Component {
   state = {
@@ -31,7 +32,33 @@ class LogIn extends Component {
 
   render() {
     return (
-      <div>
+      <div className="ui container" id="signin">
+        <div className="ui form">
+          <div className="field">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email address"
+              onChange={this.handleChange}
+              value={this.state.email}
+              required
+            />
+          </div>
+          <div className="field">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={this.handleChange}
+              value={this.state.password}
+              required
+              pattern="(?=.*\d)(?=.*[a-zA-Z]).{8,}"
+              title="Password must be a combination of number and letters, and at least 8 or more characters"
+            />
+          </div>
+        </div>
         <button onClick={this.handleSubmit}>Login</button>
       </div>
     );

@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 
 import { signup, signUpWithGoogle } from '../../services/auth';
+import './styles.css'
 
 class SignUp extends Component {
   state = {
     error: null,
-    name: 'Test User',
-    email: 'test@test1.com',
-    password: '123456',
-    password2: '123456',
+    name: '',
+    email: '',
+    password: '',
+    password2: '',
   };
 
   componentDidMount() {
@@ -22,11 +23,15 @@ class SignUp extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ error: '' });
-    try {
-      await signup(this.state.email, this.state.password, this.state.name);
-    } catch (error) {
-      this.setState({ error: error.message });
+    if(this.state.password != this.state.password2) {
+      alert("Password do not match!");
+    } else {
+      this.setState({ error: '' });
+      try {
+        await signup(this.state.email, this.state.password, this.state.name);
+      } catch (error) {
+        this.setState({ error: error.message });
+      }
     }
   };
 
@@ -40,7 +45,57 @@ class SignUp extends Component {
 
   render() {
     return (
-      <div>
+      <div className="ui container" id="signup">
+        <div className="ui form">
+          <div className="field">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              onChange={this.handleChange}
+              value={this.state.name}
+              required
+            />
+          </div>
+          <div className="field">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email address"
+              onChange={this.handleChange}
+              value={this.state.email}
+              required
+            />
+          </div>
+          <div className="field">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={this.handleChange}
+              value={this.state.password}
+              required
+              pattern="(?=.*\d)(?=.*[a-zA-Z]).{8,}"
+              title="Password must be a combination of number and letters, and at least 8 or more characters"
+            />
+          </div>
+          <div className="field">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              name="password2"
+              placeholder="Confirm Password"
+              onChange={this.handleChange}
+              value={this.state.password2}
+              required
+              pattern="(?=.*\d)(?=.*[a-zA-Z]).{8,}"
+              title="Password must be a combination of number and letters, and at least 8 or more characters"
+            />
+          </div>
+        </div>
         <button onClick={this.handleSubmit}>Sign Up</button>
       </div>
     );
