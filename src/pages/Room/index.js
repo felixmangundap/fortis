@@ -62,24 +62,34 @@ class Room extends Component {
   }
 
   submitQuestion = () => {
-    const { roomId } = this.state;
-    const questionsRef = firestore.collection("rooms").doc(roomId).collection("questions")
-    questionsRef
-    .add({
-      question: this.state.question,
-      upvotes: 0,
-      resolved: false
-    })
-    .then((docRef) => {
-      questionsRef
-        .doc(docRef.id)
-        .update({
-          uid: docRef.id
+    const { anonymous, userId, roomId } = this.state;
+    var authorName;
+    firestore
+      .collection('users')
+      .doc(userId)
+      .get()
+      .then(doc => {
+        authorName = anonymous ? "(anonymous)" : doc.data().name;
+        const questionsRef = firestore.collection("rooms").doc(roomId).collection("questions")
+        questionsRef
+        .add({
+          question: this.state.question,
+          upvotes: [],
+          resolved: false,
+          author: authorName
         })
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+        .then((docRef) => {
+          questionsRef
+            .doc(docRef.id)
+            .update({
+              uid: docRef.id
+            })
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+      });
+    
   }
 
   getRoomInfo = () => {
@@ -201,7 +211,7 @@ class Room extends Component {
               upvote
             </button>
             <div>
-              {question.upvotes.length}
+              {question.upvotes.length} asked by = {question.author}
             </div>
           </div>
         ))}
