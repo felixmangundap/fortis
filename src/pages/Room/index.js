@@ -45,7 +45,6 @@ class Room extends Component {
       .onSnapshot((snapshot) => {
         const currentQuestion = snapshot.data();
         currentQuestion.upvotes.forEach((currentId) => {
-          console.log(currentId)
           if (currentId + '' == userId + '') {
             isPresent = true; 
           }
@@ -60,11 +59,6 @@ class Room extends Component {
             })
         }
       })
-  }
-
-  handleDownvote = (e) => {
-    const { userId, roomId } = this.state;
-    console.log("Di dalam downvote")
   }
 
   submitQuestion = () => {
@@ -205,9 +199,6 @@ class Room extends Component {
             </div>
             <button onClick={() => this.handleUpvote(question.uid)}>
               upvote
-            </button>
-            <button onClick={() => this.handleDownvote(question.uid)}>
-              downvote
             </button>
             <div>
               {question.upvotes.length}

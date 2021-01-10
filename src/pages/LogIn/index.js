@@ -66,6 +66,7 @@ class LogIn extends Component {
           </div>
         </div>
         <button className="ui button" onClick={this.handleSubmit}>Login</button>
+        <button className="ui button" onClick={this.googleSignIn}>Login with Google</button>
       </div>
     );
   }
