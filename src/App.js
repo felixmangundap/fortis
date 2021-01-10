@@ -8,6 +8,7 @@ import {
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
+import History from './pages/History';
 import Room from './pages/Room';
 import SignUp from './pages/SignUp';
 import LogIn from './pages/LogIn';
@@ -97,6 +98,11 @@ class App extends Component {
               path="/dashboard"
               authenticated={this.state.authenticated}
               component={Dashboard}
+            ></PrivateRoute>
+            <PrivateRoute
+              path="/history"
+              authenticated={this.state.authenticated}
+              component={History}
             ></PrivateRoute>
             <PrivateRoute
               path="/room/:code"

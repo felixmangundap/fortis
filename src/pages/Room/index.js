@@ -159,8 +159,6 @@ class Room extends Component {
         .onSnapshot(
           (snapshot) => {
             snapshot.docChanges().forEach((change) => {
-              console.log(snapshot.size);
-              console.log(change.doc.data());
               this.setState({ [emo]: snapshot.size })
             });
           },
