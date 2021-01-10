@@ -80,14 +80,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 125px;
-  width: 100px;
+  height: 150px;
+  width: 125px;
   border-radius: 10px;
   margin: 0 15px;
+  transition: 0.25s;
+  cursor: pointer;
 }
 
 .option:hover {
-  background: cornflowerblue;
+  background: rgba(61, 169, 252, 0.35);
 }
 
 .searchBar {
@@ -123,6 +125,7 @@
   margin: 0;
   padding: 0;
   color: #3da9fc !important;
+  cursor: pointer;
 }
 
 .no-grow {
@@ -147,4 +150,32 @@
 .record-button {
   background: #3DA9FC !important;
   color: #fff !important;
+}
+
+.classMood {
+  margin-top: 15px;
+}
+
+.option.selected {
+  background: rgba(61, 169, 252, 0.35);
+}
+
+.option {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.option_image {
+  margin-bottom: 10px;
+}
+
+.option_number {
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 40px;
+}
+
+.red {
+  color: #DD1010;
 }

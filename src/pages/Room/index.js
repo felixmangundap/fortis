@@ -17,6 +17,7 @@ class Room extends Component {
     roomCode: this.props.match.params.code,
     roomName: '',
     userId: auth().currentUser.uid,
+    currentEmo: '',
 
     soundRecorder: new MicRecorder({ bitRate: 128 }),
     isRecording: false,
@@ -321,6 +322,9 @@ class Room extends Component {
       .set({
         vote: 1
       })
+      .then(() => {
+        this.setState({ currentEmo: emo })
+      })
       .catch((error) => {
         console.error(error)
       })
@@ -338,7 +342,7 @@ class Room extends Component {
   }
 
   renderClassInfo = () => {
-    const { roomName, roomCode, slow, fast, confusing, perfect } = this.state;
+    const { roomName, roomCode, slow, fast, confusing, perfect, currentEmo } = this.state;
     return (
       <div className="info">
         <div className="roomName">{roomName}</div>
@@ -350,34 +354,45 @@ class Room extends Component {
           Leave Room
         </Link>
         <div className="classMood">
-          <div className="option" onClick={() => this.handleEmotions('slow')}>
+          <div className={`option ${currentEmo === 'slow' ? 'selected' : null}`} onClick={() => this.handleEmotions('slow')}>
             <img
               src={require('../../data/img/snooze.svg')}
-              className="image"
+              className="option_image"
             />
             Too Slow
-            {slow}
+            <div className={`option_number ${slow >= 5 ? 'red' : null}`}>
+              {slow}
+            </div>
           </div>
-          <div className="option" onClick={() => this.handleEmotions('fast')}>
+          <div className={`option ${currentEmo === 'fast' ? 'selected' : null}`} onClick={() => this.handleEmotions('fast')}>
             <img
               src={require('../../data/img/quick.svg')}
+              className="option_image"
             />
             Too Quick
-            {fast}
+            <div className={`option_number ${fast >= 5 ? 'red' : null}`}>
+              {fast}
+            </div>
           </div>
-          <div className="option" onClick={() => this.handleEmotions('confusing')}>
+          <div className={`option ${currentEmo === 'confusing' ? 'selected' : null}`} onClick={() => this.handleEmotions('confusing')}>
             <img
               src={require('../../data/img/confusing.svg')}
+              className="option_image"
             />
             Too Confusing
-            {confusing}
+            <div className={`option_number ${confusing >= 5 ? 'red' : null}`}>
+              {confusing}
+            </div>
           </div>
-          <div className="option" onClick={() => this.handleEmotions('perfect')}>
+          <div className={`option ${currentEmo === 'perfect' ? 'selected' : null}`} onClick={() => this.handleEmotions('perfect')}>
             <img
               src={require('../../data/img/perfect.svg')}
+              className="option_image"
             />
             Perfect!
-            {perfect}
+            <div className={`option_number ${perfect >= 5 ? 'red' : null}`}>
+              {perfect}
+            </div>
           </div>
         </div>
       </div>
