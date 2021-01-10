@@ -37,7 +37,7 @@ class SignUp extends Component {
 
   googleSignIn = async () => {
     try {
-      await signUpWithGoogle(this.state.name);
+      await signUpWithGoogle(this.state.type);
     } catch (error) {
       this.setState({ error: error.message });
     }
@@ -96,7 +96,8 @@ class SignUp extends Component {
             />
           </div>
         </div>
-        <button onClick={this.handleSubmit}>Sign Up</button>
+        <button className="ui button" onClick={this.handleSubmit}>Sign Up</button>
+        <button className="ui button" onClick={this.googleSignIn}>Sign Up with Google</button>
       </div>
     );
   }

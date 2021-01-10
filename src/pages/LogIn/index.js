@@ -65,7 +65,7 @@ class LogIn extends Component {
             />
           </div>
         </div>
-        <button onClick={this.handleSubmit}>Login</button>
+        <button className="ui button" onClick={this.handleSubmit}>Login</button>
       </div>
     );
   }
