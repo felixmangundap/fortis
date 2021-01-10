@@ -1,6 +1,6 @@
 #room {
-  margin: 110px 0 25px;
-  height: 100vh;
+  padding: 110px 0 25px;
+  /* height: 100vh; */
 }
 
 .info {
@@ -13,6 +13,10 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+}
+
+#question {
+  margin-bottom: 100px;
 }
 
 .roomName {
@@ -28,6 +32,11 @@
   color: white;
 }
 
+.leaveroom {
+  margin-top: 7px;
+  color: #094067;
+}
+
 #myInput {
   border: none;
   color: white;
@@ -39,13 +48,18 @@
   box-shadow: none;
 }
 
+.grid .column .card-question .liked .upvote-button {
+  color: #3da9fc;
+}
+
 .grid .column .card-question .resolve-button {
   background-color: #90b4ce;
   color: white;
 }
 
 .grid .column .card-question .resolve-icon {
-  margin-left: 10px;
+  margin-left: 10px !important;
+  margin-top: 1px !important;
 }
 
 .grid .column .card-question .upvote-button {
@@ -77,11 +91,13 @@
 .searchBar {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 75vw;
   padding: 15px;
   background: #f9f9f9;
   border: 1px solid #ccc;
   border-radius: 5px;
+  bottom: 45px;
+  position: fixed;
 }
 
 .questionField {
@@ -99,4 +115,10 @@
 
 .anonymousCheckbox {
   margin-right: 7px;
+}
+
+#submit-icon {
+  margin: 0;
+  padding: 0;
+  color: #3da9fc !important;
 }

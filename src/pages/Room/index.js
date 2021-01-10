@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 import { auth, firestore } from '../../services/firebase';
 
 import './styles.css';
@@ -40,28 +41,30 @@ class Room extends Component {
   };
 
   handleUpvote = (questionId) => {
-    const { userId, roomCode } = this.state;
-    const questionsRef = firestore.collection("rooms").doc(roomCode).collection("questions")
-    var isPresent = false;
-    questionsRef
-      .doc(questionId)
-      .onSnapshot((snapshot) => {
-        const currentQuestion = snapshot.data();
-        currentQuestion.upvotes.forEach((currentId) => {
-          if (currentId + '' == userId + '') {
-            isPresent = true; 
+    if(!this.isUserPresenter(this.state.userId)) {
+      const { userId, roomCode } = this.state;
+      const questionsRef = firestore.collection("rooms").doc(roomCode).collection("questions")
+      var isPresent = false;
+      questionsRef
+        .doc(questionId)
+        .onSnapshot((snapshot) => {
+          const currentQuestion = snapshot.data();
+          currentQuestion.upvotes.forEach((currentId) => {
+            if (currentId + '' == userId + '') {
+              isPresent = true; 
+            }
+          })
+          if (!isPresent) {
+            const upvotes = currentQuestion.upvotes
+            upvotes.push(userId);
+            questionsRef
+              .doc(questionId)
+              .update({
+                upvotes: upvotes
+              })
           }
         })
-        if (!isPresent) {
-          const upvotes = currentQuestion.upvotes
-          upvotes.push(userId);
-          questionsRef
-            .doc(questionId)
-            .update({
-              upvotes: upvotes
-            })
-        }
-      })
+    }
   }
 
   handleResolve = (questionId) => {
@@ -81,7 +84,8 @@ class Room extends Component {
       })
   }
 
-  submitQuestion = () => {
+  submitQuestion = (e) => {
+    e.preventDefault();
     const { anonymous, userId, roomCode } = this.state;
     var authorName;
     firestore
@@ -132,6 +136,16 @@ class Room extends Component {
   isUserPresenter = (userId) => {
     const { presenterId } = this.state;
     return presenterId == userId;
+  }
+
+  isLiked = (likeList) => {
+    var liked = false;
+    likeList.forEach((currentId) => {
+      if (currentId + '' == this.state.userId + '') {
+        liked = true; 
+      }
+    })
+    return liked;
   }
 
   fetchStatistics = (emo) => {
@@ -242,7 +256,11 @@ class Room extends Component {
         <div className="roomName">{roomName}</div>
         <button className="ui button" id="roomCode" onClick={this.handleCopy}>
           Join Code: 
-          <input type="text" value={roomCode} id="myInput"/></button>
+          <input type="text" value={roomCode} id="myInput"/>
+        </button>
+        <Link className="leaveroom" to="/dashboard">
+          Leave Room
+        </Link>
         <div className="classMood">
           <div className="option" onClick={() => this.handleEmotions('slow')}>
             <img
@@ -282,11 +300,12 @@ class Room extends Component {
     const { userId, questions } = this.state;
 
     return (
+      <div id="question">
         <div className="ui two column stackable grid">
-        {questions.map(question => (
-          <div className="ui column">
+        {questions.length> 0 && questions.map(question => (
+          <div className="ui column" key={question.uid}>
           <div className="ui fluid card card-question">
-            <div className="content">
+            <div className={`content ${this.isLiked(question.upvotes) ? `liked` : ``}`}>
               <button className="ui right floated icon button upvote-button" onClick={() => this.handleUpvote(question.uid)}>
                 <i className="caret up icon"></i>
                 {question.upvotes.length}
@@ -296,23 +315,18 @@ class Room extends Component {
                 <p>{question.question}</p>
               </div>
             </div>
-            <div className="extra content" style={{borderTop: "white"}}>
-                { !this.isUserPresenter(userId) &&
-                <button className="ui icon button resolve-button" onClick={() => this.handleUpvote(question.uid)}>
-                  Upvote
-                  <i className="caret up icon"></i>
-                </button> }
-                { this.isUserPresenter(userId) &&
-                <button className= "ui icon button resolve-button" onClick={() => this.handleResolve(question.uid)}>
+            { this.isUserPresenter(userId) &&
+              <div className="extra content" style={{borderTop: "white"}}>
+                <button className= "ui icon right floated button resolve-button" onClick={() => this.handleResolve(question.uid)}>
                   Resolve
                   <i className="check circle outline icon resolve-icon"></i>
-                </button> }
-              {/* </span> */}
-            </div>
+                </button>
+            </div>}
           </div>
           </div>
         ))}
         </div>
+      </div>
     )
   }
 
@@ -338,9 +352,8 @@ class Room extends Component {
             onChange={this.handleToggle} />
           <div>Anonymous</div>
         </div>
-        <a onClick={this.submitQuestion}>
-          Send
-        </a>
+        <i className="ui arrow circle right icon" id="submit-icon" onClick={this.submitQuestion}>
+        </i>
       </div>
     );
   }
