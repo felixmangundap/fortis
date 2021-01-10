@@ -99,7 +99,7 @@ class App extends Component {
               component={Dashboard}
             ></PrivateRoute>
             <PrivateRoute
-              path="/room"
+              path="/room/:code"
               authenticated={this.state.authenticated}
               component={Room}
             ></PrivateRoute>
