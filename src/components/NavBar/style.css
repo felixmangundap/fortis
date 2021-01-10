@@ -1,7 +1,7 @@
 #menubar {
-  /* background: transparent; */
+  background: transparent;
   position: absolute;
-  /* top: 15px; */
+  top: 30px;
 }
 
 .no-border {
@@ -16,6 +16,12 @@
   font-size: 1.25em;
 }
 
-.logoImage {
-  height: 50px;
+.logo {
+  width: 200% !important;
+  height: 60px;
+  left: 0;
+}
+
+.navbar-container {
+  padding-left: 5.5vw;
 }

@@ -6,12 +6,12 @@ import { signout } from '../../services/auth';
 
 const guestLinks = (
   <div className="right menu ">
-    <Link to="/login" className="item text no-border">
+    {/* <Link to="/login" className="item text no-border">
       Login
     </Link>
     <Link to="/signup" className="item text no-border">
       Sign Up
-    </Link>
+    </Link> */}
   </div>
 );
 
@@ -40,7 +40,7 @@ class NavBar extends Component {
         <div id='menubar' className="ui inverted fixed big menu">
           <div className="ui container">
             <Link to="/" className="item no-border">
-              Fortis
+              <img src={require('../../data/img/resolve.svg')} className="logo" />
             </Link>
             {this.props.authenticated === true ? authLinks(this.onSignout) : guestLinks}
           </div>
