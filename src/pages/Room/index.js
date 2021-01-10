@@ -36,15 +36,34 @@ class Room extends Component {
     });
   };
 
-  handleUpvote = (e) => {
-    const { userId, roomId, questions } = this.state;
-    console.log("Di dalam upvote")
-    console.log(questions)
+  handleUpvote = (questionId) => {
+    const { userId, roomId } = this.state;
     const questionsRef = firestore.collection("rooms").doc(roomId).collection("questions")
+    var isPresent = false;
+    questionsRef
+      .doc(questionId)
+      .onSnapshot((snapshot) => {
+        const currentQuestion = snapshot.data();
+        currentQuestion.upvotes.forEach((currentId) => {
+          console.log(currentId)
+          if (currentId + '' == userId + '') {
+            isPresent = true; 
+          }
+        })
+        if (!isPresent) {
+          const upvotes = currentQuestion.upvotes
+          upvotes.push(userId);
+          questionsRef
+            .doc(questionId)
+            .update({
+              upvotes: upvotes
+            })
+        }
+      })
   }
 
   handleDownvote = (e) => {
-    const { userId, roomId, questions } = this.state;
+    const { userId, roomId } = this.state;
     console.log("Di dalam downvote")
   }
 
@@ -184,10 +203,10 @@ class Room extends Component {
             <div>
               {question.question}
             </div>
-            <button onClick={this.handleUpvote}>
+            <button onClick={() => this.handleUpvote(question.uid)}>
               upvote
             </button>
-            <button onClick={this.handleDownvote}>
+            <button onClick={() => this.handleDownvote(question.uid)}>
               downvote
             </button>
             <div>
