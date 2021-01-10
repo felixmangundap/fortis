@@ -20,7 +20,10 @@ class Room extends Component {
 
   componentDidMount() {
     this.getRoomInfo();
-    // this.fetchStatistics();
+    this.fetchStatistics('slow');
+    this.fetchStatistics('fast');
+    this.fetchStatistics('confusing');
+    this.fetchStatistics('perfect');
     this.fetchQuestions();
   }
 
@@ -131,28 +134,28 @@ class Room extends Component {
     return presenterId == userId;
   }
 
-  // fetchStatistics = () => {
-  //   const { roomId } = this.state;
+  fetchStatistics = (emo) => {
+    const { roomId } = this.state;
 
-  //   if (roomId) {
-  //     firestore
-  //       .collection('rooms')
-  //       .doc(roomId)
-  //       .collection('moods')
-  //       .onSnapshot(
-  //         (snapshot) => {
-  //           snapshot.docChanges().forEach((change) => {
-  //             if (change.type === 'modified') {
-  //               console.log(change.doc.data());
-  //             }
-  //           });
-  //         },
-  //         (err) => {
-  //           console.log(err.toString());
-  //         }
-  //       );
-  //   }
-  // }
+    if (roomId) {
+      firestore
+        .collection('rooms')
+        .doc(roomId)
+        .collection(emo)
+        .onSnapshot(
+          (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+              console.log(snapshot.size);
+              console.log(change.doc.data());
+              this.setState({ [emo]: snapshot.size })
+            });
+          },
+          (err) => {
+            console.log(err.toString());
+          }
+        );
+    }
+  }
 
   fetchQuestions = () => {
     const { questions } = this.state;
@@ -191,40 +194,70 @@ class Room extends Component {
     }
   }
 
-  handleEmotions = () => {
+  handleEmotions = (emo) => {
+    const { userId, roomId } = this.state;
+    const emos = ['slow', 'fast', 'confusing', 'perfect'];
 
+    emos.forEach(emo => {
+      firestore
+        .collection("rooms")
+        .doc(roomId)
+        .collection(emo)
+        .doc(userId)
+        .delete()
+        .catch((error) => {
+          console.error(error)
+        })
+    })
+
+
+    firestore
+      .collection("rooms")
+      .doc(roomId)
+      .collection(emo)
+      .doc(userId)
+      .set({
+        vote: 1
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
   renderClassInfo = () => {
-    const { roomName } = this.state;
+    const { roomName, slow, fast, confusing, perfect } = this.state;
     return (
       <div className="info">
         <div className="roomName">{roomName}</div>
         <div className="classMood">
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('slow')}>
             <img
                 src={require('../../data/img/snooze.svg')}
                 className="image"
               />
             Too Slow
+            {slow}
             </div>
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('fast')}>
             <img
                 src={require('../../data/img/quick.svg')}
               />
             Too Quick
+            {fast}
             </div>
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('confusing')}>
             <img
                 src={require('../../data/img/confusing.svg')}
               />
             Too Confusing
+            {confusing}
             </div>
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('perfect')}>
             <img
                 src={require('../../data/img/perfect.svg')}
               />
             Perfect!
+            {perfect}
           </div>
         </div>
       </div>
