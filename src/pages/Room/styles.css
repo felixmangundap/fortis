@@ -1,5 +1,5 @@
 #room {
-  margin: 85px 0 25px;
+  margin: 110px 0 25px;
   height: 100vh;
 }
 
@@ -20,6 +20,18 @@
   font-size: 32px;
   font-weight: 600;
   margin-bottom: 25px;
+}
+
+#roomCode {
+  background-color: #3da9fc;
+  border-radius: 20px;
+  color: white;
+}
+
+#myInput {
+  border: none;
+  color: white;
+  background-color: transparent;
 }
 
 .classMood {

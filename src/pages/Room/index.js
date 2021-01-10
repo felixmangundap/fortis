@@ -13,7 +13,7 @@ class Room extends Component {
     question: '',
     questions: [],
     presenterId: '',
-    roomId: this.props.match.params.code,
+    roomCode: this.props.match.params.code,
     roomName: '',
     userId: auth().currentUser.uid,
   };
@@ -37,8 +37,8 @@ class Room extends Component {
   };
 
   handleUpvote = (questionId) => {
-    const { userId, roomId } = this.state;
-    const questionsRef = firestore.collection("rooms").doc(roomId).collection("questions")
+    const { userId, roomCode } = this.state;
+    const questionsRef = firestore.collection("rooms").doc(roomCode).collection("questions")
     var isPresent = false;
     questionsRef
       .doc(questionId)
@@ -62,8 +62,8 @@ class Room extends Component {
   }
 
   handleResolve = (questionId) => {
-    const { roomId } = this.state;
-    const questionRef = firestore.collection("rooms").doc(roomId).collection("questions")
+    const { roomCode } = this.state;
+    const questionRef = firestore.collection("rooms").doc(roomCode).collection("questions")
     questionRef
       .doc(questionId)
       .onSnapshot((snapshot) => {
@@ -79,7 +79,7 @@ class Room extends Component {
   }
 
   submitQuestion = () => {
-    const { anonymous, userId, roomId } = this.state;
+    const { anonymous, userId, roomCode } = this.state;
     var authorName;
     firestore
       .collection('users')
@@ -87,7 +87,7 @@ class Room extends Component {
       .get()
       .then(doc => {
         authorName = anonymous ? "(anonymous)" : doc.data().name;
-        const questionsRef = firestore.collection("rooms").doc(roomId).collection("questions")
+        const questionsRef = firestore.collection("rooms").doc(roomCode).collection("questions")
         questionsRef
         .add({
           question: this.state.question,
@@ -110,17 +110,17 @@ class Room extends Component {
   }
 
   getRoomInfo = () => {
-    const { roomId } = this.state;
+    const { roomCode } = this.state;
 
-    if (roomId) {
+    if (roomCode) {
       firestore
         .collection('rooms')
-        .doc(roomId)
+        .doc(roomCode)
         .onSnapshot((snapshot) => {
           // console.log(snapshot.data())
           if (snapshot.data()) {
             const { roomName, presenterId } = snapshot.data();
-            this.setState({ roomName, presenterId });
+            this.setState({ roomName, presenterId, roomCode });
           }
         })
     }
@@ -132,12 +132,12 @@ class Room extends Component {
   }
 
   // fetchStatistics = () => {
-  //   const { roomId } = this.state;
+  //   const { roomCode } = this.state;
 
-  //   if (roomId) {
+  //   if (roomCode) {
   //     firestore
   //       .collection('rooms')
-  //       .doc(roomId)
+  //       .doc(roomCode)
   //       .collection('moods')
   //       .onSnapshot(
   //         (snapshot) => {
@@ -156,12 +156,12 @@ class Room extends Component {
 
   fetchQuestions = () => {
     const { questions } = this.state;
-    const { roomId } = this.state;
+    const { roomCode } = this.state;
 
-    if (roomId) {
+    if (roomCode) {
       firestore
         .collection('rooms')
-        .doc(roomId)
+        .doc(roomCode)
         .collection('questions')
         .onSnapshot(
           (snapshot) => {
@@ -195,11 +195,25 @@ class Room extends Component {
 
   }
 
+  handleCopy = () => {
+    var copyText = document.getElementById("myInput");
+
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+  }
+
   renderClassInfo = () => {
-    const { roomName } = this.state;
+    const { roomName, roomCode } = this.state;
     return (
       <div className="info">
         <div className="roomName">{roomName}</div>
+        <button className="ui button" id="roomCode" onClick={this.handleCopy}>
+          Join Code: 
+          <input type="text" value={roomCode} id="myInput"/></button>
         <div className="classMood">
           <div className="option" onClick={this.handleEmotions}>
             <img
