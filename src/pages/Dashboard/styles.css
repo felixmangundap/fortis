@@ -68,3 +68,8 @@
   font-size: 36px;
   color: white;
 }
+
+.whitePlaceholder::placeholder {
+  color: #fff;
+  opacity: 1;
+}

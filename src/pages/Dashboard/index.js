@@ -116,6 +116,7 @@ class Dashboard extends Component {
               <div className="ui fluid input">
                 <input type="text" 
                 id="join-input"
+                className="whitePlaceholder"
                 placeholder="Enter an existing room code here..." 
                 name="code" 
                 onChange={this.handleChange}
