@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { auth, firestore } from '../../services/firebase';
 import _ from 'lodash';
 
@@ -52,30 +52,30 @@ class History extends Component {
 
     return (
       <div>
-        {!_.isEmpty(rooms) && roomIds.map(room => (
-          <div className="ui container">
-            <div className="bg" />
-            <div className="bgInfo">
-              <div className="bgTitle">History</div>
-              <div className="bgText">Previous sessions you attended will be saved here. No more missing questions.</div>
-            </div>
-            <div className="ui column">
-              <div onClick={() => {this.setState({redirect: true, roomId: rooms[room].roomCode})}} className="ui fluid card card-question">
+        <div className="ui container">
+          <div className="bg" />
+          <div className="bgInfo">
+            <div className="bgTitle">History</div>
+            <div className="bgText">Previous sessions you attended will be saved here. No more missing questions.</div>
+          </div>
+          <div className="ui column">
+            {!_.isEmpty(rooms) && roomIds.map(room => (
+              <div onClick={() => { this.setState({ redirect: true, roomId: rooms[room].roomCode }) }} className="ui fluid card card-question">
                 <div className="content padd">
                   <div className="classHeader">{rooms[room].roomName}</div>
                   <div className="classCode">{rooms[room].roomCode}</div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     )
   }
 
   render() {
     if (this.state.redirect) {
-      return <Redirect to={`/room/${this.state.roomId}`}/>;
+      return <Redirect to={`/room/${this.state.roomId}`} />;
     }
 
     return (
