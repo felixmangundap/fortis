@@ -39,7 +39,7 @@ class NavBar extends Component {
       <Fragment>
         <div id='menubar' className="ui inverted fixed big menu">
           <div className="ui container">
-            <Link to="/" className="item no-border">
+            <Link to="/" className="item no-border no-padding">
               <img src={require('../../data/img/resolve.svg')} className="logo" />
             </Link>
             {this.props.authenticated === true ? authLinks(this.onSignout) : guestLinks}
