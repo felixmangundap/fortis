@@ -126,6 +126,11 @@ class Room extends Component {
     }
   }
 
+  isUserPresenter = (userId) => {
+    const { presenterId } = this.state;
+    return presenterId == userId;
+  }
+
   // fetchStatistics = () => {
   //   const { roomId } = this.state;
 
@@ -227,7 +232,7 @@ class Room extends Component {
   }
 
   renderQuestions = () => {
-    const { questions } = this.state;
+    const { userId, questions } = this.state;
 
     // console.log(questions);
     return (
@@ -237,12 +242,14 @@ class Room extends Component {
             <div>
               {question.question}
             </div>
+            { !this.isUserPresenter(userId) &&
             <button onClick={() => this.handleUpvote(question.uid)}>
               upvote
-            </button>
+            </button> }
+            { this.isUserPresenter(userId) &&
             <button onClick={() => this.handleResolve(question.uid)}>
               resolve
-            </button>
+            </button> }
             <div>
               {question.upvotes.length} asked by = {question.author}
             </div>
