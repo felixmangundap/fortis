@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
-import { auth, firestore } from '../../services/firebase';
-
+import { Link } from 'react-router-dom';
+import MicRecorder from 'mic-recorder-to-mp3';
+import { auth, firestore, storage } from '../../services/firebase';
 import './styles.css';
 
 class Room extends Component {
@@ -17,6 +17,11 @@ class Room extends Component {
     roomCode: this.props.match.params.code,
     roomName: '',
     userId: auth().currentUser.uid,
+
+    soundRecorder: new MicRecorder({ bitRate: 128 }),
+    isRecording: false,
+    isBlocked: false,
+    recordingQuestionId: '',
   };
 
   componentDidMount() {
@@ -26,7 +31,63 @@ class Room extends Component {
     this.fetchStatistics('confusing');
     this.fetchStatistics('perfect');
     this.fetchQuestions();
+
+    navigator.getUserMedia({ audio: true },
+      () => {
+        console.log('Permission Granted');
+        this.setState({ isBlocked: false });
+      },
+      () => {
+        console.log('Permission Denied');
+        this.setState({ isBlocked: true })
+      },
+    );
   }
+
+  uploadSound = (qId, blob) => {
+    const { roomCode } = this.state;
+
+    const metadata = {
+      contentType: 'audio/ogg'
+    };
+
+    const reference = `answers/ ${qId}`;
+
+    storage.child(reference).put(blob, metadata).then(function (snapshot) {
+      firestore
+        .collection("rooms")
+        .doc(roomCode)
+        .collection("questions")
+        .doc(qId)
+        .update({
+          audioRef: reference,
+        })
+
+      console.log('Uploaded a blob or file!');
+    });
+  }
+
+  startRecording = (qId) => {
+    if (this.state.isBlocked) {
+      console.log('Permission Denied');
+    } else {
+      this.state.soundRecorder
+        .start()
+        .then(() => {
+          this.setState({ isRecording: true, recordingQuestionId: qId });
+        }).catch((e) => console.error(e));
+    }
+  };
+
+  stopRecording = () => {
+    this.state.soundRecorder
+      .stop()
+      .getMp3()
+      .then(([buffer, blob]) => {
+        this.uploadSound(this.state.recordingQuestionId, blob)
+        this.setState({ isRecording: false });
+      }).catch((e) => console.log(e));
+  };
 
   handleChange = (e) => {
     this.setState({
@@ -41,7 +102,7 @@ class Room extends Component {
   };
 
   handleUpvote = (questionId) => {
-    if(!this.isUserPresenter(this.state.userId)) {
+    if (!this.isUserPresenter(this.state.userId)) {
       const { userId, roomCode } = this.state;
       const questionsRef = firestore.collection("rooms").doc(roomCode).collection("questions")
       var isPresent = false;
@@ -51,7 +112,7 @@ class Room extends Component {
           const currentQuestion = snapshot.data();
           currentQuestion.upvotes.forEach((currentId) => {
             if (currentId + '' == userId + '') {
-              isPresent = true; 
+              isPresent = true;
             }
           })
           if (!isPresent) {
@@ -96,24 +157,25 @@ class Room extends Component {
         authorName = anonymous ? "(anonymous)" : doc.data().name;
         const questionsRef = firestore.collection("rooms").doc(roomCode).collection("questions")
         questionsRef
-        .add({
-          question: this.state.question,
-          upvotes: [],
-          resolved: false,
-          author: authorName
-        })
-        .then((docRef) => {
-          questionsRef
-            .doc(docRef.id)
-            .update({
-              uid: docRef.id
-            })
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+          .add({
+            question: this.state.question,
+            upvotes: [],
+            audioRef: '',
+            resolved: false,
+            author: authorName
+          })
+          .then((docRef) => {
+            questionsRef
+              .doc(docRef.id)
+              .update({
+                uid: docRef.id
+              })
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       });
-    
+
   }
 
   getRoomInfo = () => {
@@ -142,7 +204,7 @@ class Room extends Component {
     var liked = false;
     likeList.forEach((currentId) => {
       if (currentId + '' == this.state.userId + '') {
-        liked = true; 
+        liked = true;
       }
     })
     return liked;
@@ -169,7 +231,7 @@ class Room extends Component {
     }
   }
 
-  fetchQuestions = () => {
+  fetchQuestions = async () => {
     const { questions } = this.state;
     const { roomCode } = this.state;
 
@@ -182,20 +244,48 @@ class Room extends Component {
           (snapshot) => {
             snapshot.docChanges().forEach((change) => {
               if (change.type === 'added') {
-                // console.log(change.doc.data());
-                questions.push(change.doc.data());
-                questions.sort((a, b) => {
-                  if (a.upvotes.length > b.upvotes.length) {
-                    return -1;
-                  } else if (a.upvotes.length < b.upvotes.length) {
-                    return 1;
-                  } else {
-                    return 0;
-                  }
-                })
-                this.setState({
-                  questions: questions
-                })
+                const question = {
+                  ...change.doc.data(),
+                }
+
+                if (question.audioRef) {
+                  const soundRef = storage.child(question.audioRef);
+
+                  soundRef
+                    .getDownloadURL()
+                    .then(url => {
+                      question.audioUrl = url;
+                      questions.push(question);
+                      questions.sort((a, b) => {
+                        if (a.upvotes.length > b.upvotes.length) {
+                          return -1;
+                        } else if (a.upvotes.length < b.upvotes.length) {
+                          return 1;
+                        } else {
+                          return 0;
+                        }
+                      })
+                      this.setState({
+                        questions: questions
+                      })
+                    })
+                }
+
+                else {
+                  questions.push(question);
+                  questions.sort((a, b) => {
+                    if (a.upvotes.length > b.upvotes.length) {
+                      return -1;
+                    } else if (a.upvotes.length < b.upvotes.length) {
+                      return 1;
+                    } else {
+                      return 0;
+                    }
+                  })
+                  this.setState({
+                    questions: questions
+                  })
+                }
               }
             });
           },
@@ -253,8 +343,8 @@ class Room extends Component {
       <div className="info">
         <div className="roomName">{roomName}</div>
         <button className="ui button" id="roomCode" onClick={this.handleCopy}>
-          Join Code: 
-          <input type="text" value={roomCode} id="myInput"/>
+          Join Code:
+          <input type="text" value={roomCode} id="myInput" />
         </button>
         <Link className="leaveroom" to="/dashboard">
           Leave Room
@@ -262,30 +352,30 @@ class Room extends Component {
         <div className="classMood">
           <div className="option" onClick={() => this.handleEmotions('slow')}>
             <img
-                src={require('../../data/img/snooze.svg')}
-                className="image"
-              />
+              src={require('../../data/img/snooze.svg')}
+              className="image"
+            />
             Too Slow
             {slow}
-            </div>
+          </div>
           <div className="option" onClick={() => this.handleEmotions('fast')}>
             <img
-                src={require('../../data/img/quick.svg')}
-              />
+              src={require('../../data/img/quick.svg')}
+            />
             Too Quick
             {fast}
-            </div>
+          </div>
           <div className="option" onClick={() => this.handleEmotions('confusing')}>
             <img
-                src={require('../../data/img/confusing.svg')}
-              />
+              src={require('../../data/img/confusing.svg')}
+            />
             Too Confusing
             {confusing}
-            </div>
+          </div>
           <div className="option" onClick={() => this.handleEmotions('perfect')}>
             <img
-                src={require('../../data/img/perfect.svg')}
-              />
+              src={require('../../data/img/perfect.svg')}
+            />
             Perfect!
             {perfect}
           </div>
@@ -297,32 +387,62 @@ class Room extends Component {
   renderQuestions = () => {
     const { userId, questions } = this.state;
 
+    console.log(questions);
+
     return (
       <div id="question">
         <div className="ui two column stackable grid">
-        {questions.length> 0 && questions.map(question => (
-          <div className="ui column" key={question.uid}>
-          <div className="ui fluid card card-question">
-            <div className={`content ${this.isLiked(question.upvotes) ? `liked` : ``}`}>
-              <button className="ui right floated icon button upvote-button" onClick={() => this.handleUpvote(question.uid)}>
-                <i className="caret up icon"></i>
-                {question.upvotes.length}
-              </button>
-              <div className="header">{question.author}</div>
-              <div className="description">
-                <p>{question.question}</p>
+          {questions.length > 0 && questions.map(question => {
+            const qId = question.uid;
+
+            const showStopRecording = this.state.isRecording && this.state.recordingQuestionId === qId;
+            const showResolveAudio = this.isUserPresenter(userId) && !question.audioUrl;
+
+            return (
+              <div className="ui column" key={question.uid}>
+                <div className="ui fluid card card-question">
+                  <div className={`content no-grow ${this.isLiked(question.upvotes) ? `liked` : ``}`}>
+                    <button className="ui right floated icon button upvote-button" onClick={() => this.handleUpvote(question.uid)}>
+                      <i className="caret up icon"></i>
+                      {question.upvotes.length}
+                    </button>
+                    <div className="header">{question.author}</div>
+                    <div className="description">
+                      <p>{question.question}</p>
+                    </div>
+                  </div>
+                  <div className="extra content" style={{ borderTop: "white" }}>
+                    {showResolveAudio ? (
+                      <div>
+                        {
+                          showStopRecording ?
+                            (<button className="ui icon right floated button stop-button" onClick={() => this.stopRecording()}>
+                              Stop Recording
+                              <i className="microphone icon resolve-icon"></i>
+                            </button>) : (
+                              <button className="ui icon button record-button" onClick={() => this.startRecording(qId)}>
+                                Resolve With Audio
+                                <i className="microphone icon resolve-icon"></i>
+                              </button>
+                            )
+                        }
+
+                        <button className="ui icon button resolve-button" onClick={() => this.handleResolve(question.uid)}>
+                          Resolve
+                          <i className="check circle outline icon resolve-icon"></i>
+                        </button>
+                      </div>
+                    ) : null}
+                    {
+                      question.audioUrl ?
+                        <audio src={question.audioUrl} controls="controls" /> : null
+                    }
+                    {/* </span> */}
+                  </div>
+                </div>
               </div>
-            </div>
-            { this.isUserPresenter(userId) &&
-              <div className="extra content" style={{borderTop: "white"}}>
-                <button className= "ui icon right floated button resolve-button" onClick={() => this.handleResolve(question.uid)}>
-                  Resolve
-                  <i className="check circle outline icon resolve-icon"></i>
-                </button>
-            </div>}
-          </div>
-          </div>
-        ))}
+            )
+          })}
         </div>
       </div>
     )

@@ -1,6 +1,7 @@
 #room {
-  padding: 110px 0 25px;
+  /* padding: 0 0 125px; */
   /* height: 100vh; */
+  /* margin-bottom: 125px; */
 }
 
 .info {
@@ -16,7 +17,7 @@
 }
 
 #question {
-  margin-bottom: 100px;
+  padding-bottom: 125px;
 }
 
 .roomName {
@@ -44,6 +45,7 @@
 }
 
 .grid .column .card-question {
+  height: 100%;
   background-color: #f9f9f9;
   box-shadow: none;
 }
@@ -91,7 +93,7 @@
 .searchBar {
   display: flex;
   align-items: center;
-  width: 75vw;
+  width: 1127px;
   padding: 15px;
   background: #f9f9f9;
   border: 1px solid #ccc;
@@ -121,4 +123,28 @@
   margin: 0;
   padding: 0;
   color: #3da9fc !important;
+}
+
+.no-grow {
+  flex-grow: 0 !important;
+}
+
+.icon.resolve-icon {
+  padding-left: 5px !important;
+}
+
+.extra {
+  flex-grow: 1 !important;
+  display: flex;
+  align-items: center;
+}
+
+.stop-button {
+  background: #FC3D3D !important;
+  color: #fff !important;
+}
+
+.record-button {
+  background: #3DA9FC !important;
+  color: #fff !important;
 }
