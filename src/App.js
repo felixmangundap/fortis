@@ -92,7 +92,7 @@ class App extends Component {
               exact
               path="/"
               authenticated={this.state.authenticated}
-              component={Home}
+              component={LogIn}
             ></PublicRoute>
             <PrivateRoute
               path="/dashboard"
