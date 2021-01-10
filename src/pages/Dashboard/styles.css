@@ -1,0 +1,36 @@
+#dashboard {
+  /* background-color: red; */
+  position: absolute;
+  width: 50vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#divider {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+#create-button {
+  background-color: #3da9fc;
+  border-radius: 10px;
+}
+
+#join-button {
+  background-color: #3da9fc;
+  border-radius: 10px;
+}
+
+#create-input {
+  border-top: transparent;
+  border-left: transparent;
+  border-right: transparent;
+}
+
+#join-input {
+  border-top: transparent;
+  border-left: transparent;
+  border-right: transparent;
+}
