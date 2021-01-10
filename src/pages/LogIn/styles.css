@@ -6,7 +6,7 @@
 #left-login {
   position: relative;
   background-color: #b7dcff;
-  padding-top: 20vh;
+  padding-top: 25vh;
   padding-bottom: 20vh;
   padding-left: 7vw;
   padding-right: 7vw;
@@ -24,7 +24,7 @@
 }
 
 #innerleft-login h1 {
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 1100;
   color: white;
   margin: 0;
@@ -50,8 +50,9 @@
 }
 
 .image-people {
-  width: 45vw;
-  left: 10px;
+  width: 35vw;
+  left: 50%;
+  transform: translate(-50%, 0);
   bottom: 0;
   position: absolute;
   overflow: hidden;
