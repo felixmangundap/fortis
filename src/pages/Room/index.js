@@ -20,7 +20,10 @@ class Room extends Component {
 
   componentDidMount() {
     this.getRoomInfo();
-    // this.fetchStatistics();
+    this.fetchStatistics('slow');
+    this.fetchStatistics('fast');
+    this.fetchStatistics('confusing');
+    this.fetchStatistics('perfect');
     this.fetchQuestions();
   }
 
@@ -131,28 +134,28 @@ class Room extends Component {
     return presenterId == userId;
   }
 
-  // fetchStatistics = () => {
-  //   const { roomCode } = this.state;
+  fetchStatistics = (emo) => {
+    const { roomCode } = this.state;
 
-  //   if (roomCode) {
-  //     firestore
-  //       .collection('rooms')
-  //       .doc(roomCode)
-  //       .collection('moods')
-  //       .onSnapshot(
-  //         (snapshot) => {
-  //           snapshot.docChanges().forEach((change) => {
-  //             if (change.type === 'modified') {
-  //               console.log(change.doc.data());
-  //             }
-  //           });
-  //         },
-  //         (err) => {
-  //           console.log(err.toString());
-  //         }
-  //       );
-  //   }
-  // }
+    if (roomCode) {
+      firestore
+        .collection('rooms')
+        .doc(roomCode)
+        .collection(emo)
+        .onSnapshot(
+          (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+              console.log(snapshot.size);
+              console.log(change.doc.data());
+              this.setState({ [emo]: snapshot.size })
+            });
+          },
+          (err) => {
+            console.log(err.toString());
+          }
+        );
+    }
+  }
 
   fetchQuestions = () => {
     const { questions } = this.state;
@@ -191,8 +194,34 @@ class Room extends Component {
     }
   }
 
-  handleEmotions = () => {
+  handleEmotions = (emo) => {
+    const { userId, roomCode } = this.state;
+    const emos = ['slow', 'fast', 'confusing', 'perfect'];
 
+    emos.forEach(emotion => {
+      firestore
+        .collection("rooms")
+        .doc(roomCode)
+        .collection(emotion)
+        .doc(userId)
+        .delete()
+        .catch((error) => {
+          console.error(error)
+        })
+    })
+
+
+    firestore
+      .collection("rooms")
+      .doc(roomCode)
+      .collection(emo)
+      .doc(userId)
+      .set({
+        vote: 1
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
   handleCopy = () => {
@@ -207,7 +236,7 @@ class Room extends Component {
   }
 
   renderClassInfo = () => {
-    const { roomName, roomCode } = this.state;
+    const { roomName, roomCode, slow, fast, confusing, perfect } = this.state;
     return (
       <div className="info">
         <div className="roomName">{roomName}</div>
@@ -215,30 +244,34 @@ class Room extends Component {
           Join Code: 
           <input type="text" value={roomCode} id="myInput"/></button>
         <div className="classMood">
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('slow')}>
             <img
                 src={require('../../data/img/snooze.svg')}
                 className="image"
               />
             Too Slow
+            {slow}
             </div>
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('fast')}>
             <img
                 src={require('../../data/img/quick.svg')}
               />
             Too Quick
+            {fast}
             </div>
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('confusing')}>
             <img
                 src={require('../../data/img/confusing.svg')}
               />
             Too Confusing
+            {confusing}
             </div>
-          <div className="option" onClick={this.handleEmotions}>
+          <div className="option" onClick={() => this.handleEmotions('perfect')}>
             <img
                 src={require('../../data/img/perfect.svg')}
               />
             Perfect!
+            {perfect}
           </div>
         </div>
       </div>
@@ -248,7 +281,6 @@ class Room extends Component {
   renderQuestions = () => {
     const { userId, questions } = this.state;
 
-    // console.log(questions);
     return (
         <div className="ui two column stackable grid">
         {questions.map(question => (
