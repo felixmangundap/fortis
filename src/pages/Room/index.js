@@ -287,25 +287,27 @@ class Room extends Component {
           <div className="ui column">
           <div className="ui fluid card card-question">
             <div className="content">
+              <button className="ui right floated icon button upvote-button" onClick={() => this.handleUpvote(question.uid)}>
+                <i className="caret up icon"></i>
+                {question.upvotes.length}
+              </button>
               <div className="header">{question.author}</div>
               <div className="description">
                 <p>{question.question}</p>
               </div>
             </div>
-            <div className="extra content">
-              <span className="left floated like">
-                <i className="caret up icon"></i>
-                {question.upvotes.length}
+            <div className="extra content" style={{borderTop: "white"}}>
                 { !this.isUserPresenter(userId) &&
-                <button onClick={() => this.handleUpvote(question.uid)}>
-                  upvote
+                <button className="ui icon button resolve-button" onClick={() => this.handleUpvote(question.uid)}>
+                  Upvote
+                  <i className="caret up icon"></i>
                 </button> }
                 { this.isUserPresenter(userId) &&
                 <button className= "ui icon button resolve-button" onClick={() => this.handleResolve(question.uid)}>
                   Resolve
-                  <i className="check circle outline icon"></i>
+                  <i className="check circle outline icon resolve-icon"></i>
                 </button> }
-              </span>
+              {/* </span> */}
             </div>
           </div>
           </div>

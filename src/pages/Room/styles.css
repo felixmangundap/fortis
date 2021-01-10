@@ -44,6 +44,16 @@
   color: white;
 }
 
+.grid .column .card-question .resolve-icon {
+  margin-left: 10px;
+}
+
+.grid .column .card-question .upvote-button {
+  padding: 0;
+  background-color: transparent;
+  color: #c8c8c8;
+}
+
 .classMood {
   display: flex;
   flex-flow: row nowrap;
