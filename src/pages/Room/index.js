@@ -13,7 +13,7 @@ class Room extends Component {
     question: '',
     questions: [],
     presenterId: '',
-    roomId: 'LNpWUigdsM98Xd8ovVUy',
+    roomId: this.props.match.params.code,
     roomName: '',
     userId: auth.currentUser.uid,
   };
