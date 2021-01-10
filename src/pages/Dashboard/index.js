@@ -9,7 +9,7 @@ class Dashboard extends Component {
     error: '',
     code: '',
     roomName: '',
-    presenterId: auth.currentUser.uid,
+    presenterId: auth().currentUser.uid,
     redirect: false
   };
 
