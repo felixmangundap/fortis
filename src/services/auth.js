@@ -8,7 +8,7 @@ export const signup = (email, password, name) => {
     .set({
       uid: registeredUser.user.uid,
       name,
-      rooms: [],
+      rooms: [''],
     })
   })
 }
@@ -35,7 +35,7 @@ export const signUpWithGoogle = (name) => {
     .set({
       uid: registeredUser.user.uid,
       name,
-      rooms: [],
+      rooms: [''],
     })
   });
 }
