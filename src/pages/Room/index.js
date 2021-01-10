@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { auth, firestore } from '../../services/firebase';
+import { auth, db, firestore } from '../../services/firebase';
 
 import './styles.css';
 
@@ -15,7 +15,7 @@ class Room extends Component {
     presenterId: '',
     roomId: 'LNpWUigdsM98Xd8ovVUy',
     roomName: '',
-    userId: auth.currentUser.uid,
+    userId: auth().currentUser.uid,
   };
 
   componentDidMount() {
@@ -36,6 +36,39 @@ class Room extends Component {
     });
   };
 
+  handleUpvote = (e) => {
+    const { userId, roomId, questions } = this.state;
+    console.log("Di dalam upvote")
+    console.log(questions)
+    const questionsRef = firestore.collection("rooms").doc(roomId).collection("questions")
+  }
+
+  handleDownvote = (e) => {
+    const { userId, roomId, questions } = this.state;
+    console.log("Di dalam downvote")
+  }
+
+  submitQuestion = () => {
+    const { roomId } = this.state;
+    const questionsRef = firestore.collection("rooms").doc(roomId).collection("questions")
+    questionsRef
+    .add({
+      question: this.state.question,
+      upvotes: 0,
+      resolved: false
+    })
+    .then((docRef) => {
+      questionsRef
+        .doc(docRef.id)
+        .update({
+          uid: docRef.id
+        })
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
+
   getRoomInfo = () => {
     const { roomId } = this.state;
 
@@ -44,6 +77,7 @@ class Room extends Component {
         .collection('rooms')
         .doc(roomId)
         .onSnapshot((snapshot) => {
+          // console.log(snapshot.data())
           if (snapshot.data()) {
             const { roomName, presenterId } = snapshot.data();
             this.setState({ roomName, presenterId });
@@ -88,8 +122,20 @@ class Room extends Component {
           (snapshot) => {
             snapshot.docChanges().forEach((change) => {
               if (change.type === 'added') {
-                console.log(change.doc.data());
+                // console.log(change.doc.data());
                 questions.push(change.doc.data());
+                questions.sort((a, b) => {
+                  if (a.upvotes.length > b.upvotes.length) {
+                    return -1;
+                  } else if (a.upvotes.length < b.upvotes.length) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                })
+                this.setState({
+                  questions: questions
+                })
               }
             });
           },
@@ -130,7 +176,7 @@ class Room extends Component {
   renderQuestions = () => {
     const { questions } = this.state;
 
-    console.log(questions);
+    // console.log(questions);
     return (
       <div>
         {questions.map(question => (
@@ -138,8 +184,14 @@ class Room extends Component {
             <div>
               {question.question}
             </div>
+            <button onClick={this.handleUpvote}>
+              upvote
+            </button>
+            <button onClick={this.handleDownvote}>
+              downvote
+            </button>
             <div>
-              {question.upvotes}
+              {question.upvotes.length}
             </div>
           </div>
         ))}
