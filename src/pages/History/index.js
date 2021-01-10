@@ -33,7 +33,7 @@ class History extends Component {
     const roomsRef = firestore.collection('rooms')
     const snapshot = await roomsRef.get()
     const temp = {}
-    snapshot.forEach(function(doc) {
+    snapshot.forEach(function (doc) {
       temp[doc.data().roomCode] = doc.data()
     })
     this.setState({
@@ -46,28 +46,28 @@ class History extends Component {
 
   renderRooms = () => {
     const { userId, rooms, roomIds } = this.state;
-    
+
     return (
-        <div>
+      <div>
         {!_.isEmpty(rooms) && roomIds.map(room => (
           <div className="ui column">
-          <div className="ui fluid card card-question">
-            <div className="content">
-              <div className="header">{rooms[room].roomName}</div>
-              <div className="description">
-                <p>{rooms[room].roomName}</p>
+            <div className="ui fluid card card-question">
+              <div className="content">
+                <div className="header">{rooms[room].roomName}</div>
+                <div className="description">
+                  <p>{rooms[room].roomName}</p>
+                </div>
               </div>
-            </div>
-            <div className="extra content" style={{borderTop: "white"}}>
-                <button className= "ui icon button resolve-button">
+              <div className="extra content" style={{ borderTop: "white" }}>
+                <button className="ui icon button resolve-button">
                   Resolve
                   <i className="check circle outline icon resolve-icon"></i>
-                </button> 
+                </button>
+              </div>
             </div>
           </div>
-          </div>
         ))}
-        </div>
+      </div>
     )
   }
 
@@ -78,7 +78,7 @@ class History extends Component {
       </div>
     );
   }
-  
+
 }
 
 export default History;

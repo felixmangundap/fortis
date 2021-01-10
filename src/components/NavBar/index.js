@@ -17,7 +17,10 @@ const guestLinks = (
 
 const authLinks = (onSignout) => (
   <div className="right menu ">
-    <Link onClick={onSignout} className="item text no-border">
+    <Link to="/history" className="item text no-border">
+      History
+    </Link>
+    <Link to='' onClick={onSignout} className="item text no-border">
       Sign Out
     </Link>
   </div>

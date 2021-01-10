@@ -82,7 +82,7 @@ class App extends Component {
 
   render() {
     return this.state.loading === true ? (
-      <h2>Loading...</h2>
+      <div></div>
     ) : (
       <Router>
         <Fragment>
