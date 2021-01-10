@@ -1,64 +1,69 @@
 import React, { Component } from 'react';
 import { auth, firestore } from '../../services/firebase';
+import _ from 'lodash';
 
 import './styles.css';
 
 class History extends Component {
   state = {
     userId: auth().currentUser.uid,
-    rooms: [],
+    rooms: {},
+    roomIds: []
   }
 
   componentDidMount() {
     this.fetchRooms()
+    this.fetchRoomDetails()
   }
 
   fetchRooms = () => {
-    const { userId, rooms } = this.state;
-    firestore
-      .collection('users')
+    const { userId } = this.state;
+    firestore.collection('users')
       .doc(userId)
-      .onSnapshot((snapshot) => {
-        var temp = snapshot.data().rooms
-        var temp2 = []
-        console.log(temp)
-        temp.forEach((roomId) => {
-          firestore
-            .collection('rooms')
-            .doc(roomId)
-            .onSnapshot((snapshot) => {
-              temp2.push(snapshot.data())
-            })
-            console.log(temp2)
-            this.setState({
-              rooms: temp2
-            })
+      .get()
+      .then((doc) => {
+        this.setState({
+          roomIds: doc.data().rooms
         })
       })
   }
 
-  renderRooms = () => {
+  fetchRoomDetails = async () => {
     const { userId, rooms } = this.state;
+    const roomsRef = firestore.collection('rooms')
+    const snapshot = await roomsRef.get()
+    const temp = {}
+    snapshot.forEach(function(doc) {
+      temp[doc.data().roomCode] = doc.data()
+    })
+    this.setState({
+      rooms: {
+        ...rooms,
+        ...temp
+      }
+    })
+  }
 
-    console.log("di dalem renderroom")
-    console.log(rooms)
+  renderRooms = () => {
+    const { userId, rooms, roomIds } = this.state;
+    
     return (
         <div>
-        {rooms.map(room => (
-          <div>
-          <div>
-            <div>
-              <div>{room.roomName}</div>
-              <div>
-                <p>{room.roomCode}</p>
+        {!_.isEmpty(rooms) && roomIds.map(room => (
+          <div className="ui column">
+          <div className="ui fluid card card-question">
+            <div className="content">
+              <div className="header">{rooms[room].roomName}</div>
+              <div className="description">
+                <p>{rooms[room].roomName}</p>
               </div>
             </div>
-            {/* <div className="extra content" style={{borderTop: "white"}}>
+            <div className="extra content" style={{borderTop: "white"}}>
                 <button className= "ui icon button resolve-button">
                   Resolve
                   <i className="check circle outline icon resolve-icon"></i>
                 </button> 
-            </div> */}
+            </div>
           </div>
           </div>
         ))}
