@@ -1,0 +1,72 @@
+
+#room {
+  margin: 85px 0 25px;
+  height: 100vh;
+}
+
+.info {
+  width: 100%;
+  background: rgba(61, 169, 252, 0.15);
+  padding: 50px 0 25px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.roomName {
+  color: #094067;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.classMood {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 125px;
+  width: 100px;
+  border-radius: 10px;
+  margin: 0 15px;
+}
+
+.option:hover {
+  background: cornflowerblue;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.questionField {
+  flex-grow: 1;
+  background: none;
+  border: none;
+  margin-right: 15px;
+}
+
+.anonymous {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.anonymousCheckbox {
+  margin-right: 7px;
+}
+
