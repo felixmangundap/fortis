@@ -1,3 +1,75 @@
-#signin {
-  margin-top: 100px;
+#login {
+  padding: 0;
+  margin: 0;
+}
+
+#left-login {
+  position: relative;
+  background-color: #b7dcff;
+  padding-top: 20vh;
+  padding-bottom: 20vh;
+  padding-left: 7vw;
+  padding-right: 7vw;
+  height: 100vh;
+}
+
+#right-login {
+  position: relative;
+  padding-top: 20vh;
+  padding-bottom: 20vh;
+  padding-left: 8vw;
+  padding-right: 8vw;
+  height: 100vh;
+  height: 100vh;
+}
+
+#innerleft-login h1 {
+  font-size: 36px;
+  font-weight: 1100;
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+#innerright-login h1 {
+  font-size: 36px;
+  color: #094067;
+}
+
+#button-login {
+  color: white;
+  background-color: #094067;
+  border-radius: 10px;
+}
+
+#button-loginGoogle {
+  color: #094067 !important;
+  background-color: white;
+  border-color: #094067 !important;
+  border-radius: 10px;
+}
+
+.image-people {
+  width: 45vw;
+  left: 10px;
+  bottom: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+.image-madewlove {
+  bottom: 30px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.bottom-message {
+  margin: 20px;
+  text-align: center;
+}
+
+label {
+  color: #5f6c7b !important;
+  font-weight: 400 !important;
 }

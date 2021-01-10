@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import {Link} from 'react-router-dom';
 
 import { signup, signUpWithGoogle } from '../../services/auth';
 import './styles.css'
@@ -112,7 +113,8 @@ class SignUp extends Component {
                 <button className="ui fluid button" id="button-signup" onClick={this.handleSubmit}>Sign Up</button>
                 <div className="ui horizontal divider">OR</div>
                 <button className="ui basic fluid button" id="button-signupGoogle" onClick={this.googleSignIn}>Register with Google</button>
-              </div>
+                <div className="bottom-message">Already have an account? <Link to="/login">Login</Link></div>
+                </div>
               <img
                 src={require('../../data/img/Made_with_love.svg')}
                 className="image-madewlove"
