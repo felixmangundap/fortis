@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { auth, db, firestore } from '../../services/firebase';
+import { auth, firestore } from '../../services/firebase';
 
 import './styles.css';
 
@@ -56,6 +56,23 @@ class Room extends Component {
             .doc(questionId)
             .update({
               upvotes: upvotes
+            })
+        }
+      })
+  }
+
+  handleResolve = (questionId) => {
+    const { roomId } = this.state;
+    const questionRef = firestore.collection("rooms").doc(roomId).collection("questions")
+    questionRef
+      .doc(questionId)
+      .onSnapshot((snapshot) => {
+        const currentQuestion = snapshot.data();
+        if (!currentQuestion.resolved) {
+          questionRef
+            .doc(questionId)
+            .update({
+              resolved: true
             })
         }
       })
@@ -169,7 +186,7 @@ class Room extends Component {
     }
   }
 
-  upSlow = () => {
+  handleEmotions = () => {
 
   }
 
@@ -179,18 +196,31 @@ class Room extends Component {
       <div className="info">
         <div className="roomName">{roomName}</div>
         <div className="classMood">
-          <div className="option" onClick={this.upSlow}>
+          <div className="option" onClick={this.handleEmotions}>
+            <img
+                src={require('../../data/img/snooze.svg')}
+                className="image"
+              />
             Too Slow
             </div>
-          <div className="option">
+          <div className="option" onClick={this.handleEmotions}>
+            <img
+                src={require('../../data/img/quick.svg')}
+              />
             Too Quick
             </div>
-          <div className="option">
+          <div className="option" onClick={this.handleEmotions}>
+            <img
+                src={require('../../data/img/confusing.svg')}
+              />
             Too Confusing
             </div>
-          <div className="option">
+          <div className="option" onClick={this.handleEmotions}>
+            <img
+                src={require('../../data/img/perfect.svg')}
+              />
             Perfect!
-            </div>
+          </div>
         </div>
       </div>
     )
@@ -209,6 +239,9 @@ class Room extends Component {
             </div>
             <button onClick={() => this.handleUpvote(question.uid)}>
               upvote
+            </button>
+            <button onClick={() => this.handleResolve(question.uid)}>
+              resolve
             </button>
             <div>
               {question.upvotes.length} asked by = {question.author}
