@@ -12,6 +12,12 @@ class LogIn extends Component {
   componentDidMount() {
   }
 
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
     this.setState({ error: '' });
