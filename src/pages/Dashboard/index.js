@@ -23,14 +23,34 @@ class Dashboard extends Component {
   };
 
   handleCreateRoom = async (e) => {
+    const { presenterId, roomName } = this.state;
     e.preventDefault();
-    console.log(this.state.roomName);
     this.setState({ error: '' });
     let ref;
     try {
       ref = await firestore.collection('rooms').doc();
       await firestore.collection('rooms').doc(ref.id)
-        .set({roomName: this.state.roomName, roomCode: ref.id, presenterId: this.state.presenterId});
+        .set({
+          roomName: roomName,
+          roomCode: ref.id,
+          presenterId: presenterId
+        })
+      
+      firestore
+        .collection('users')
+        .doc(presenterId)
+        .onSnapshot((snapshot) => {
+          const rooms = snapshot.data().rooms
+          if (!rooms.includes(ref.id)) {
+            rooms.push(ref.id);
+          }
+          firestore
+            .collection('users')
+            .doc(presenterId)
+            .update({
+              rooms: rooms
+            })
+        })
       this.setState({redirect: true, code: ref.id});
     } catch (error) {
       this.setState({ error: error.message });
@@ -38,11 +58,27 @@ class Dashboard extends Component {
   };
 
   handleJoinRoom = async (e) => {
+    const { code, presenterId } = this.state;
     e.preventDefault();
     this.setState({ error: '' });
     try {
-      await firestore.collection('rooms').doc(this.state.code).get().then((doc) => {
+      await firestore.collection('rooms').doc(code).get().then((doc) => {
         if (doc.exists) {
+          firestore
+            .collection('users')
+            .doc(presenterId)
+            .onSnapshot((snapshot) => {
+              const rooms = snapshot.data().rooms
+              if (!rooms.includes(code)) {
+                rooms.push(code);
+              }
+              firestore
+                .collection('users')
+                .doc(presenterId)
+                .update({
+                  rooms: rooms
+                })
+            })
           this.setState({redirect: true});
         } else {
           alert("Invalid room code!");

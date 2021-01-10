@@ -8,7 +8,7 @@ export const signup = (email, password, name) => {
     .set({
       uid: registeredUser.user.uid,
       name,
-      rooms: [''],
+      rooms: [],
     })
   })
 }
@@ -27,9 +27,7 @@ export const signInWithGoogle = () => {
 }
 
 export const signUpWithGoogle = (name) => {
-  console.log("masuk signupwith google")
   const provider = new auth.GoogleAuthProvider();
-  console.log (provider)
   return auth().signInWithPopup(provider)
   .then(registeredUser => {
     firestore.collection("users")

@@ -1,0 +1,102 @@
+#room {
+  margin: 110px 0 25px;
+  height: 100vh;
+}
+
+.info {
+  width: 100%;
+  background: rgba(61, 169, 252, 0.15);
+  padding: 50px 0 25px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.roomName {
+  color: #094067;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+#roomCode {
+  background-color: #3da9fc;
+  border-radius: 20px;
+  color: white;
+}
+
+#myInput {
+  border: none;
+  color: white;
+  background-color: transparent;
+}
+
+.grid .column .card-question {
+  background-color: #f9f9f9;
+  box-shadow: none;
+}
+
+.grid .column .card-question .resolve-button {
+  background-color: #90b4ce;
+  color: white;
+}
+
+.grid .column .card-question .resolve-icon {
+  margin-left: 10px;
+}
+
+.grid .column .card-question .upvote-button {
+  padding: 0;
+  background-color: transparent;
+  color: #c8c8c8;
+}
+
+.classMood {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 125px;
+  width: 100px;
+  border-radius: 10px;
+  margin: 0 15px;
+}
+
+.option:hover {
+  background: cornflowerblue;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.questionField {
+  flex-grow: 1;
+  background: none;
+  border: none;
+  margin-right: 15px;
+}
+
+.anonymous {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.anonymousCheckbox {
+  margin-right: 7px;
+}
