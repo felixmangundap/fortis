@@ -1,7 +1,7 @@
 import { auth, firestore } from "./firebase";
 
 export const signup = (email, password, name) => {
-  return auth.createUserWithEmailAndPassword(email, password)
+  return auth().createUserWithEmailAndPassword(email, password)
   .then(registeredUser => {
     firestore.collection("users")
     .doc(registeredUser.user.uid)
@@ -14,28 +14,30 @@ export const signup = (email, password, name) => {
 }
 
 export const signin = (email, password) => {
-  return auth.signInWithEmailAndPassword(email, password);
+  return auth().signInWithEmailAndPassword(email, password);
 }
 
 export const signout = () => {
-  return auth.signOut();
+  return auth().signOut();
 }
 
 export const signInWithGoogle = () => {
   const provider = new auth.GoogleAuthProvider();
-  return auth.signInWithPopup(provider);
+  return auth().signInWithPopup(provider);
 }
 
 export const signUpWithGoogle = (name) => {
+  console.log("masuk signupwith google")
   const provider = new auth.GoogleAuthProvider();
-  return auth.signInWithPopup(provider)
+  console.log (provider)
+  return auth().signInWithPopup(provider)
   .then(registeredUser => {
     firestore.collection("users")
     .doc(registeredUser.user.uid)
     .set({
       uid: registeredUser.user.uid,
       name,
-      rooms: [''],
+      rooms: ['']
     })
   });
 }

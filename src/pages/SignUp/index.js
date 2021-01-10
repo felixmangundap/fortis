@@ -37,7 +37,7 @@ class SignUp extends Component {
 
   googleSignIn = async () => {
     try {
-      await signUpWithGoogle(this.state.type);
+      await signUpWithGoogle(this.state.name);
     } catch (error) {
       this.setState({ error: error.message });
     }
