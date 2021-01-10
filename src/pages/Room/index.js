@@ -135,12 +135,12 @@ class Room extends Component {
   }
 
   fetchStatistics = (emo) => {
-    const { roomId } = this.state;
+    const { roomCode } = this.state;
 
-    if (roomId) {
+    if (roomCode) {
       firestore
         .collection('rooms')
-        .doc(roomId)
+        .doc(roomCode)
         .collection(emo)
         .onSnapshot(
           (snapshot) => {
@@ -195,14 +195,14 @@ class Room extends Component {
   }
 
   handleEmotions = (emo) => {
-    const { userId, roomId } = this.state;
+    const { userId, roomCode } = this.state;
     const emos = ['slow', 'fast', 'confusing', 'perfect'];
 
-    emos.forEach(emo => {
+    emos.forEach(emotion => {
       firestore
         .collection("rooms")
-        .doc(roomId)
-        .collection(emo)
+        .doc(roomCode)
+        .collection(emotion)
         .doc(userId)
         .delete()
         .catch((error) => {
@@ -213,7 +213,7 @@ class Room extends Component {
 
     firestore
       .collection("rooms")
-      .doc(roomId)
+      .doc(roomCode)
       .collection(emo)
       .doc(userId)
       .set({
